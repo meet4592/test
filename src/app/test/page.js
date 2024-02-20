@@ -9,7 +9,7 @@ const RollNumberAndName = () => {
   useEffect(() => {
     const fetchStudentData = async () => {
       try {
-        const response = await axios.get("/api/students"); // Make a GET request to the API endpoint
+        const response = await axios.get("/api/test"); // Make a GET request to the API endpoint
         setStudentData(response.data.students); // Set student data from the response
       } catch (error) {
         console.error("Error fetching student data:", error);
