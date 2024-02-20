@@ -1,23 +1,20 @@
-// pages/api/students.js
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import StudentModel from '../models/Student';
 
-import { connectToDatabase } from "@/utils/db";
-import Student from "@/models/Student";
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-export async function handler(req, res) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method Not Allowed" });
-  }
+mongoose.connect("mongodb://127.0.0.1:27017/students");
 
-  try {
-    // Connect to the database
-    const sequelize = await connectToDatabase();
+app.get('/students', (req, res) => {
+  StudentModel.find()
+    .then(students => res.json(students))
+    .catch(err => res.json(err));
+});
 
-    // Fetch roll numbers and marks from the database
-    const students = await Student.findAll({ attributes: ["rollnumber", "name"] });
-
-    res.status(200).json({ students });
-  } catch (error) {
-    console.error("Error fetching student data:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-}
+app.listen(3000, () => {
+  console.log('Server is running');
+});
