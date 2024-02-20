@@ -1,37 +1,40 @@
 'use client';
+import React, { useEffect , useState } from 'react';
+import axios from 'axios';
 
-import React, { useEffect, useState } from "react";
-import axios from "axios";
 
-const RollNumberAndName = () => {
-  const [studentData, setStudentData] = useState([]);
+function Page() {
+    const [students, setStudents] = useState([])
 
-  useEffect(() => {
-    const fetchStudentData = async () => {
-      try {
-        const response = await axios.get("/api/test"); // Make a GET request to the API endpoint
-        setStudentData(response.data.students); // Set student data from the response
-      } catch (error) {
-        console.error("Error fetching student data:", error);
-      }
-    };
+    useEffect(() => {
+        axios.get('http://localhost:3000/test')
+        .then(students => setStudents(students.data))
+        .catch(err => console.log(err))
+    }, [])
 
-    fetchStudentData(); // Call the function to fetch student data
+     
+    return (
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll Number</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {students.map(student => {
+                        return (
+                            <tr>
+                                <td>{student.rollnumber}</td>
+                                <td>{student.name}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </div>
+    );
+}
 
-  }, []);
-
-  return (
-    <div className="rollnumber-and-name">
-      <h1>Marks</h1>
-      <ul>
-        {studentData.map((student, index) => (
-          <li key={index}>
-            Roll Number: {student.rollnumber}, Name: {student.name}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-export default RollNumberAndName;
+export default Page;
